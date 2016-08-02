@@ -1,16 +1,16 @@
 /**
  * External dependencies
  */
-var React = require( 'react' ),
-	noop = require( 'lodash/noop' ),
-	classnames = require( 'classnames' );
+import React from 'react';
+import noop from 'lodash/noop';
+import classnames from 'classnames';
 
 /**
  * Internal dependencies
  */
-var Popover = require( 'components/popover' ),
-	hasTouch = require( 'lib/touch-detect' ).hasTouch,
-	SiteSelector = require( 'components/site-selector' );
+import Popover from 'components/popover';
+import { hasTouch } from 'lib/touch-detect';
+import SiteSelector from 'components/site-selector';
 
 module.exports = React.createClass( {
 	displayName: 'SitesPopover',
@@ -21,6 +21,7 @@ module.exports = React.createClass( {
 		visible: React.PropTypes.bool,
 		onClose: React.PropTypes.func,
 		position: React.PropTypes.string,
+		id: React.PropTypes.string,
 		groups: React.PropTypes.bool,
 		className: React.PropTypes.string
 	},
@@ -66,6 +67,7 @@ module.exports = React.createClass( {
 
 		return (
 			<Popover
+				id={ this.props.id }
 				isVisible={ this.props.visible }
 				context={ this.props.context }
 				onClose={ this.props.onClose }
