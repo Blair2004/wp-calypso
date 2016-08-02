@@ -1,9 +1,9 @@
 /**
  * "popover" theme for `component/tip`.
  */
+
 .popover__container {
 	font-size: 11px;
-	padding: 10px;
 	z-index: z-index( 'root', '.popover__container' );
 	position: absolute;
 	top: 0;
@@ -17,6 +17,7 @@
 		box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.1 ),
 			0 0 56px rgba( 0, 0, 0, 0.075 );
 		text-align: center;
+		position: relative;
 	}
 
 	.popover__arrow {
@@ -100,16 +101,36 @@
 		left: 15px #{"/*rtl:ignore*/"};
 	}
 
-	&.popover-top-left .popover__inner,
-	&.popover-bottom-left .popover__inner {
-		position: relative;
+	// inner
+	&.popover-top .popover__inner,
+	&.popover-top-left .popover__inner, 
+	&.popover-top-right .popover__inner {
+		top: -10px #{"/*rtl:ignore*/"};
+	}
+
+	&.popover-right .popover__inner {
 		left: 10px #{"/*rtl:ignore*/"};
 	}
 
+	&.popover-left .popover__inner {
+		left: -10px #{"/*rtl:ignore*/"};
+	}
+
+
 	&.popover-top-right .popover__inner,
 	&.popover-bottom-right .popover__inner {
-		position: relative;
 		left: -10px #{"/*rtl:ignore*/"};
+	}
+
+	&.popover-bottom .popover__inner,
+	&.popover-bottom-left .popover__inner, 
+	&.popover-bottom-right .popover__inner {
+		top: 10px #{"/*rtl:ignore*/"};
+	}
+
+	&.popover-top-left .popover__inner,
+	&.popover-bottom-left .popover__inner {
+		left: 10px #{"/*rtl:ignore*/"};
 	}
 
 	&.is-dialog-visible {

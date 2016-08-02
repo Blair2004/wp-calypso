@@ -49,19 +49,23 @@ class Popover extends Component {
 		};
 	}
 
-	componentDidMount() {
-		this.id = this.props.id || `pop-${ uid( 16 ) }`;
+	componentWillMount() {
+		this.id = this.props.id || `pop__${ uid( 16 ) }`;
 		__popovers.add( this.id );
 		__popoverNumber++;
 		this.debug( 'init' );
 		debug( 'current popover instances: ', __popovers.size );
+	}
 
+	componentDidMount() {
 		this.bindEscKeyListener();
 		this.bindDebouncedReposition();
 		bindWindowListeners();
 	}
 
 	componentWillReceiveProps( nextProps ) {
+		this.debug( 'componentWillReceiveProps' );
+
 		if ( ! this.domContainer ) {
 			return null;
 		}
@@ -86,6 +90,11 @@ class Popover extends Component {
 				this.unbindClickoutHandler();
 			}
 		}
+	}
+
+	componentDidUpdate() {
+		this.debug( 'componentDidUpdate' );
+		this.debug( 'this.domContext: %o', this.domContext );
 	}
 
 	componentWillUnmount() {
@@ -182,6 +191,28 @@ class Popover extends Component {
 		this.willReposition = window.requestAnimationFrame( this.setPosition );
 	}
 
+	setDOMBehavior( domContainer ) {
+		if ( ! domContainer ) {
+			return null;
+		}
+
+		this.debug( 'setting DOM behavior' );
+
+		// store DOM element referencies
+		this.domContainer = domContainer;
+
+		// store context (target) reference into a property
+		if ( ! isDOMElement( this.props.context ) ) {
+			this.domContext = ReactDOM.findDOMNode( this.props.context );
+		} else {
+			this.domContext = this.props.context;
+		}
+
+		this.setPosition();
+
+		this.bindClickoutHandler( domContainer );
+	}
+
 	getPositionClass( position = this.props.position ) {
 		return `popover-${ position.replace( /\s+/g, '-' ) }`;
 	}
@@ -201,7 +232,7 @@ class Popover extends Component {
 		const { position } = this.props;
 
 		if ( ! domContainer || ! domContext ) {
-			this.debug( 'no DOM elements to work' );
+			this.debug( '[WARN] no DOM elements to work' );
 			return null;
 		}
 
@@ -219,6 +250,7 @@ class Popover extends Component {
 		);
 
 		this.debug( 'updating reposition: ', reposition );
+
 		return reposition;
 	}
 
@@ -237,21 +269,6 @@ class Popover extends Component {
 		return { left, top };
 	}
 
-	setDOMBehavior( domContainer ) {
-		if ( ! domContainer ) {
-			return null;
-		}
-
-		this.debug( 'setting DOM behavior' );
-
-		// store DOM element referencies
-		this.domContainer = domContainer;
-		this.domContext = ReactDOM.findDOMNode( this.props.context );
-
-		this.setPosition();
-		this.bindClickoutHandler( domContainer );
-	}
-
 	close() {
 		if ( ! this.props.isVisible ) {
 			this.debug( 'popover should be already closed' );
@@ -265,12 +282,12 @@ class Popover extends Component {
 		const { isVisible, context, className } = this.props;
 
 		if ( ! isVisible ) {
-			//this.debug( 'Popover is not visible.' );
+			this.debug( 'Popover is not visible.' );
 			return null;
 		}
 
 		if ( ! context ) {
-			//this.debug( 'No `context` to tie the Popover' );
+			this.debug( 'No `context` to tie the Popover' );
 			return null;
 		}
 

@@ -17,11 +17,14 @@ const Popovers = React.createClass( {
 
 	getInitialState: function() {
 		return {
-			popoverPosition: 'top',
+			popoverPosition: 'bottom left',
 
 			showPopover: true,
 			showPopoverMenu: false,
 			showMultiplePopover: true,
+
+			showRubicPopover: true,
+			rubicPosition: 'top'
 		};
 	},
 
@@ -84,7 +87,7 @@ const Popovers = React.createClass( {
 		return (
 			<div>
 				<button
-					className="button"
+					//className="button"
 					ref="popoverButton"
 					onClick={ this.swapPopoverVisibility }
 				>
@@ -111,7 +114,7 @@ const Popovers = React.createClass( {
 		return (
 			<div>
 				<button
-						className="button"
+						//className="button"
 						ref="popoverMenuButton"
 						onClick={ this.showPopoverMenu }
 					>
@@ -130,6 +133,92 @@ const Popovers = React.createClass( {
 					<PopoverMenuItem action="B" onClick={ this.onPopoverMenuItemBClick }>Item B</PopoverMenuItem>
 					<PopoverMenuItem action="C">Item C</PopoverMenuItem>
 				</PopoverMenu>
+			</div>
+		);
+	},
+
+	renderPopoverRubic() {
+		const squares = [];
+		const width = 150;
+		const positions = [
+			'top left',
+			'top',
+			'top right',
+
+			'left',
+			null,
+			'right',
+
+			'bottom left',
+			'bottom',
+			'bottom right',
+		];
+
+		for ( let i = 0; i < 9; i++ ) {
+			squares.push(
+				<div
+					style={ {
+						cursor: 'pointer',
+						color: '#444',
+						width: ( width / 3 ),
+						height: ( width / 3 ),
+						lineHeight: `${ width / 3 }px`,
+						textAlign: 'center',
+						'float': 'left',
+						backgroundColor: '#eee',
+						border: '1px solid #ddd',
+						boxSixing: 'border-box'
+					} }
+					key={ `rubic-${ i }` }
+					onClick={ event => {
+						const index = parseInt( event.currentTarget.innerText );
+						if ( i === 4 ) {
+							return null;
+						}
+
+						this.setState( {
+							showRubicPopover: ! this.state.showRubicPopover,
+							rubicPosition: positions[ index ]
+						} );
+					} }
+				>
+					{ i === 4 ? null : i }
+				</div>
+			);
+		}
+
+		return (
+			<div>
+				<div
+					ref="popover-rubic-reference"
+					style={ {
+						backgroundColor: '#888',
+						width: ( width + 6 ),
+						height: ( width + 6 )
+					} }
+				>
+					{ squares }
+				</div>
+
+				<Popover
+					id="popover__rubic"
+					onClose={ () => {
+						this.setState( { showRubicPopover: false } );
+					} }
+					isVisible={ this.state.showRubicPopover }
+					position={ this.state.rubicPosition }
+					context={ this.refs && this.refs[ 'popover-rubic-reference' ] }
+				>
+					<div
+						style= { {
+							padding: '10px'
+						} }
+					>
+						<div>position:
+							<strong>{ this.state.rubicPosition }</strong>
+						</div>
+					</div>
+				</Popover>
 			</div>
 		);
 	},
@@ -158,7 +247,7 @@ const Popovers = React.createClass( {
 			<div className="docs__popover-hover-example">
 				<div>
 					<button
-						className="button"
+						//className="button"
 						onClick={ this.movePopovertoRandomTarget }
 					>
 						Move to random target
@@ -231,6 +320,12 @@ const Popovers = React.createClass( {
 				<hr />
 
 				{ this.renderMenuPopover() }
+
+				<hr />
+
+				{ this.renderPopoverRubic() }
+
+				<br />
 
 				<hr />
 
